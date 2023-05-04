@@ -56,9 +56,9 @@ app.delete("/users/:id", (request, response) => {
     //read file
     const users = JSON.parse(fs.readFileSync("users.json", "utf-8"));
     //find user
-    let old_user = users.find((user) => user.id === id);
+    let delete_user = users.find((user) => user.id ===id);
     //delete user
-    users.splice(users.indexOf(old_user), 1);
+    users.splice(users.indexOf(delete_user), 1);
     //write file
     fs.writeFileSync("users.json", JSON.stringify(users));
     //send response
