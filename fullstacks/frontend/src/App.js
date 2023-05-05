@@ -10,6 +10,7 @@ function App() {
     console.log("response", response);
   };
   const onFinishFailed = (errorInfo) => {
+    const response = await axios.
     console.log("Failed:", errorInfo);
   };
   return (
