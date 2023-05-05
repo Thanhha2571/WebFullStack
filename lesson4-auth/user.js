@@ -19,21 +19,26 @@ const users = [
 //     next();
 // };
 
-const verifyUser=  (req, res, next) => {
-    const token = req.headers.authorization.split(" ")[1]
-
+const verifyUser = (req, res, next) => {
+    const token = req.headers.authorization && req.headers.authorization.split(' ')[1];
+  
     if (!token) {
-        return res.status(401).send("Missing token");
+      return res.status(401).json({ error: { msg: 'No token!' } });
     }
-
+  
     try {
-        const decodedToken = jwt.verify(token, "key");
-        req.user = users.find((user) => user.id === decodedToken.id);
-        next();
+      const decodedToken = jwt.verify(token, 'key');
+      const loginUser = users.find((user) => user.id === decodedToken.id);
+      if (!loginUser) {
+        return res.status(401).json({ error: { msg: 'Failed to authenticate token!' } });
+      }
+      req.user = loginUser;
+      next();
     } catch (error) {
-        res.status(401).send("Invalid token");
+      return res.status(401).json({ error: { msg: 'Failed to authenticate token!' } });
     }
-};
+  };
+
 
 userRouter.get('/get-all-users', verifyUser, (req, res) => {
     res.send(users);

@@ -85,7 +85,7 @@ app.delete("/users/:id", async (req, res) => {
 // });
 
 app.post("/login", async (req, res) => {
-  
+
   const { name, password } = req.body;
   let user = await userModel.findOne({ name: name });
 
