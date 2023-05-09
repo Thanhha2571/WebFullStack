@@ -8,9 +8,11 @@ songRouter.get('/', async (req, res) => {
     res.send(songs);
 })
 
+
 songRouter.get('/:id', async (req, res) => {
     const id = req.params.id;
     const song = await songModel.findById(id);
     res.send(song);
 });
+
 module.exports = { songRouter }

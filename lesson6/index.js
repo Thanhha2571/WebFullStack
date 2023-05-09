@@ -66,45 +66,22 @@ app.post ('/register', async (req, res) => {
     }
 })
 
+app.get('/song/:id', async (req, res) => {
+    const id = req.params.id;
+    const song = await songModel.findById(id);
+    // console.log(song);
+    const songRole = song.access
+    // console.log(songRole);
+    if (songRole.includes("guest")) {
+        res.send(song);
+    }
+    else {
+        res.send("You have to login to listen this song")
+    }
 
-// app.delete('/admin/edit_user/:id', authenCheck, authorCheck, async (req, res) => {
-//     const id = req.params.id;
-//     const user = await userModel.findById(id);
-//     await userModel.deleteOne({ _id: new mongoose.Types.ObjectId(id) });
-//     const users = await userModel.find({})
-//     res.send(users);
-// })
+})
 
-// app.post('/admin/edit_song/add',authenCheck,authorCheck, async (req, res) => {
-//     const {title,artist, access} = req.body;
-//     let existTitle = await songModel.findOne({title: title})
-//     if (existTitle) {
-//         res.send("Song already exists");
-//     }
-//     else {
-//         const song = await songModel.create({ title: title, artist: artist, access: access});
-//         res.send(song);
-//     }
-// })
-
-// app.delete('/admin/edit_song/:id',authenCheck,authorCheck, async (req, res) =>{
-//     const id = req.params.id;
-//     const song = await songModel.findById(id);
-//     await songModel.deleteOne({ _id: new mongoose.Types.ObjectId(id) })
-//     const songs = await songModel.find({})
-//     res.send(songs)
-// })
-// app.patch ('/admin/edit_song/:id',authenCheck,authorCheck, async (req, res) =>{
-//     const { title, artist, access } = req.body;
-//     const song = await songModel.findById(id);
-//     song.title = title;
-//     song.artist = artist;
-//     song.access = access;
-//     await song.save();
-//     res.send(song)
-// })
-
-app.use('/song', songRouter);
+app.use('/songs', songRouter);
 app.use ('/user',authenCheck, userRouter)
 app.use ('/admin',authenCheck, authorCheck, adminRouter);
 app.listen(port);

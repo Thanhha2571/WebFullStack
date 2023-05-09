@@ -29,11 +29,4 @@ userRouter.patch('/profile/edit', async (req, res) => {
     res.send(req.user);
 });
 
-// userRouter.delete('/admin/edit_user/:id', authorCheck, async (req, res) => {
-//     const users = await userModel.find({})
-//     const id = req.params.id;
-//     const user = await userModel.findById(id);
-//     await userModel.deleteOne({ _id: new mongoose.Types.ObjectId(id) });
-//     res.send(users);
-// })
 module.exports = { userRouter };

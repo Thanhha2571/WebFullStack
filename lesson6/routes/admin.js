@@ -1,5 +1,6 @@
 const express = require('express');
 const adminRouter = express.Router();
+const mongoose = require('mongoose');
 const { userModel } = require('../models/userModel')
 const { songModel } = require('../models/songModel')    
 
@@ -23,7 +24,7 @@ adminRouter.post('/edit_song/add', async (req, res) => {
     }
 })
 
-adminRouter.delete('edit_song/:id', async (req, res) =>{
+adminRouter.delete('/edit_song/:id', async (req, res) =>{
     const id = req.params.id;
     const song = await songModel.findById(id);
     await songModel.deleteOne({ _id: new mongoose.Types.ObjectId(id) })
@@ -31,6 +32,7 @@ adminRouter.delete('edit_song/:id', async (req, res) =>{
     res.send(songs)
 })
 adminRouter.patch ('/edit_song/:id', async (req, res) =>{
+    const id = req.params.id;
     const { title, artist, access } = req.body;
     const song = await songModel.findById(id);
     song.title = title;
