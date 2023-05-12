@@ -5,6 +5,7 @@ const songSchema = new mongoose.Schema({
     title: String,
     artist: String,
     access: [String]
+    // userId: {type mongoose.Type}
 });
 
 const songModel = mongoose.model('songs', songSchema);

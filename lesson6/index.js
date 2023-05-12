@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 const port = 3000;
 app.use(express.json());
 const { userRouter } = require('./routes/users')
@@ -30,7 +31,7 @@ const authenCheck = async (req, res, next) => {
     const token = req.headers.authorization.split(" ")[1]
     let decoded = jwt.verify(token, "PRIVATE KEY");
     let { username} = decoded;
-    let user = await userModel.findOne({ username: username});
+    let user = await userModel.findOne({ username: username}.populate('songs').select('username'));
     if (user) {
         req.user = user;
         next();
@@ -41,27 +42,24 @@ const authenCheck = async (req, res, next) => {
 }
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
-    let user = await userModel.findOne({ username: username });
 
-    if (!user) {
-        return res.status(401).send("User not found");
+    const user = await userModel.findOne({ username: username });
+    if (user && bcrypt.compare(password, user.password)) {
+        const token = jwt.sign({ username: username}, "PRIVATE KEY", { expiresIn: "1h" })
+        res.send({ token });   
     }
-    if (user.password !== password) {
-        return res.status(401).send("Password is incorrect");
-    }
-    const token = jwt.sign({ username: username}, "PRIVATE KEY", { expiresIn: "1h" })
-
-    res.send({ token });
 })
 
 app.post ('/register', async (req, res) => {
-    const { username, password } = req.body;
+    const { username, password, roles } = req.body;
     const existUsername = await userModel.findOne({ username: username });
     if (existUsername) {
         res.send("User already registered")
     }
     else {
-        const user = await userModel.create({ username:username, password: password, roles: ["user"]});
+        const salt = bcrypt.genSaltSync(10)
+        const hashPassword = bcrypt.hashSync(password,salt);
+        const user = await userModel.create({ username:username, password: hashPassword, role: ["user"]});
         res.send(user);
     }
 })
