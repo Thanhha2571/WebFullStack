@@ -31,12 +31,12 @@ const authenCheck = async (req, res, next) => {
     const token = req.headers.authorization.split(" ")[1]
     let decoded = jwt.verify(token, "PRIVATE KEY");
     let { username} = decoded;
-    let user = await userModel.findOne({ username: username}.populate('songs').select('username'));
+    let user = await userModel.findOne({ username: username}).populate('songs').select('username');
     if (user) {
         req.user = user;
         next();
     }
-    else {
+    else {sd
         res.send("User is not found");
     }
 }
@@ -51,7 +51,7 @@ app.post('/login', async (req, res) => {
 })
 
 app.post ('/register', async (req, res) => {
-    const { username, password, roles } = req.body;
+    const { username, password} = req.body;
     const existUsername = await userModel.findOne({ username: username });
     if (existUsername) {
         res.send("User already registered")
@@ -84,3 +84,5 @@ app.use ('/user',authenCheck, userRouter)
 app.use ('/admin',authenCheck, authorCheck, adminRouter);
 app.listen(port);
 console.log('Starting')
+
+module.exports = app
