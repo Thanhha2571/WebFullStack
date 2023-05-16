@@ -42,13 +42,13 @@ adminRouter.patch('/edit_user/:id', async (req, res) => {
 
 })
 adminRouter.post('/edit_song/add', async (req, res) => {
-    const { title, artist, access } = req.body;
+    const { title, artist} = req.body;
     let existTitle = await songModel.findOne({ title: title })
     if (existTitle) {
         res.send("Song already exists");
     }
     else {
-        const song = await songModel.create({ title: title, artist: artist, access: access });
+        const song = await songModel.create({ title: title, artist: artist, access: ["guest"] });
         res.send(song);
     }
 })

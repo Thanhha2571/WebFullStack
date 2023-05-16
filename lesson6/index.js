@@ -4,7 +4,9 @@ const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const port = 3000;
+const cors = require("cors");
 app.use(express.json());
+app.use(cors());
 const { userRouter } = require('./routes/users')
 const { songRouter } = require('./routes/songs');
 const { adminRouter } = require('./routes/admin');
@@ -31,7 +33,7 @@ const authenCheck = async (req, res, next) => {
     const token = req.headers.authorization.split(" ")[1]
     let decoded = jwt.verify(token, "PRIVATE KEY");
     let { username} = decoded;
-    let user = await userModel.findOne({ username: username}).populate('songs').select('username');
+    let user = await userModel.findOne({ username: username}).populate('songs');
     if (user) {
         req.user = user;
         next();
@@ -40,10 +42,15 @@ const authenCheck = async (req, res, next) => {
         res.send("User is not found");
     }
 }
+
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
 
     const user = await userModel.findOne({ username: username });
+
+    if (!user) {
+        res.send('User not found')
+    }
     if (user && bcrypt.compare(password, user.password)) {
         const token = jwt.sign({ username: username}, "PRIVATE KEY", { expiresIn: "1h" })
         res.send({ token });   
@@ -79,9 +86,9 @@ app.get('/song/:id', async (req, res) => {
 
 })
 
-app.use('/songs', songRouter);
+app.use('/songs',authenCheck, songRouter);
 app.use ('/user',authenCheck, userRouter)
-app.use ('/admin',authenCheck, authorCheck, adminRouter);
+app.use ('/admin',authenCheck,authorCheck, adminRouter);
 app.listen(port);
 console.log('Starting')
 

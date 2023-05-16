@@ -13,7 +13,7 @@ const authorCheck = (req, res, next) => {
         res.send("You are not an admin")
     }
 };
-userRouter.get('/', authorCheck, async (req, res) => {
+userRouter.get('/',authorCheck, async (req, res) => {
     const users = await userModel.find({});
     res.send(users);
 })
@@ -23,29 +23,15 @@ userRouter.get('/profile', async (req, res) => {
 });
 
 userRouter.patch('/profile/edit', async (req, res) => {
-    // req.user.username = req.body.username
-    // req.user.password = req.body.password
-    // await req.user.save()
-    // res.send(req.user);
-    const { song } = req.body
-    const {username} = req.user.username
+    const {song} = req.body
+    const {username} = req.user
+    console.log(username)
+    console.log(song)
+    const user = await userModel.findOneAndUpdate({username: username}, {$push : {songs: song}});
 
-    // Tim xem co user khong findOne
-    // Neu co thi xoa
-    // Update role cho user nay updateOne
-    // await userModel.updateOne({username}, {role})
-    // const user = await userModel.findOne({username})
-    // const user = await userModel.findOneAndUpdate({username}, {role}, {new: true})
-    // const user = await userModel.findOneAndUpdate({ username }, { $push: { songs: song } }, { new: true })
-    
-    const user = await userModel.findOne({username:username})
-    console.log(user.songs)
-    user.songs.push(song)
-    await user.save()
-    console.log(user.songs)
+    // const user = await userModel.findOneAndUpdate({username}, {$push: {songs: song}}, {new: true})
     // Gui lai user duoc update cho client
     res.send(user)
-
 });
 
 module.exports = { userRouter };
