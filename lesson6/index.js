@@ -3,7 +3,7 @@ const app = express();
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const port = 3000;
+const port = 4000;
 const cors = require("cors");
 app.use(express.json());
 app.use(cors());
@@ -48,9 +48,6 @@ app.post('/login', async (req, res) => {
 
     const user = await userModel.findOne({ username: username });
 
-    if (!user) {
-        res.send('User not found')
-    }
     if (user && bcrypt.compare(password, user.password)) {
         const token = jwt.sign({ username: username}, "PRIVATE KEY", { expiresIn: "1h" })
         res.send({ token });   

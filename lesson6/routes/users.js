@@ -26,11 +26,11 @@ userRouter.patch('/profile/edit', async (req, res) => {
     const {song} = req.body
     const {username} = req.user
     console.log(username)
-    console.log(song)
-    const user = await userModel.findOneAndUpdate({username: username}, {$push : {songs: song}});
-
-    // const user = await userModel.findOneAndUpdate({username}, {$push: {songs: song}}, {new: true})
+    
+    // const user = await userModel.findOneAndUpdate({username: username}, {$push : {songs: song}});
+    const user = await userModel.findOneAndUpdate({username}, {$push: {songs: song}}, {new: true})
     // Gui lai user duoc update cho client
+    
     res.send(user)
 });
 
