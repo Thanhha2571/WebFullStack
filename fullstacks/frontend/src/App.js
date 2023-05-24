@@ -38,14 +38,33 @@ import Login from "./Login";
 import User from "./User";
 import UserProfile from "./UserProfile";
 import PrivateRoute from "./PrivateRoute";
-
+import CreateSong from "./CreateSong";
+import ListSong from "./ListSong";
+import SongDetail from "./SongDetail";
+import UpdateSong from "./UpdateSong";
+import { useState, useEffect } from "react";
+import { useStyleRegister } from "antd/es/theme/internal";
+import axios from "axios";
 const App = () => {
+  const [songData, setSongData] = useState([])
+  useEffect (() => {
+    const getSongs = async () => {
+      const { data } = await axios.get("http://localhost:4000/songs")
+      setSongData(data)
+    }
+    getSongs()
+  },[])
+  console.log(songData)
   return (
     <BrowserRouter>
       <Routes>
         <Route element={<PrivateRoute />}>
           <Route path="/getAllUsers" element={<User />} />
           <Route path="/profile" element={<UserProfile />} />
+          <Route path="/add-song" element= {<CreateSong />}/>
+          <Route path="/song-list" element={<ListSong data= {songData} />} />
+          <Route path="/song-details/:_id" element={<SongDetail/>}/>
+          <Route path="/song-update/:_id" element={<UpdateSong/>}/>
         </Route>
         <Route path="/" element={<>Home</>} />
         <Route path="/register" element={<Register />} />

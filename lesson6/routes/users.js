@@ -2,6 +2,7 @@ const express = require('express');
 const userRouter = express.Router();
 const jwt = require('jsonwebtoken');
 const { userModel } = require('../models/userModel');
+const { songModel } = require('../models/songModel');
 
 const authorCheck = (req, res, next) => {
     const userRole = req.user.role;
@@ -34,4 +35,13 @@ userRouter.patch('/profile/edit', async (req, res) => {
     res.send(user)
 });
 
+// userRouter.patch('/profile/edit/:title', async (req, res) => {
+//     const title = req.params.title
+//     const song = await songModel.findOne({title: title}).populate({
+//     // res.send(song)
+//     const { username} = req.user
+//     // const user = await userModel.findOneAndUpdate({username}, {$push: {songs: song}}, {new: true})
+//     const user = await user
+//     res.send(user)
+// });
 module.exports = { userRouter };

@@ -1,30 +1,29 @@
 import { Button, Checkbox, Form, Input } from "antd";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react"
-const Login = () => {
-    const [success, setSuccess] = useState(false)
-    const navigate = useNavigate()
+import { useEffect, useState } from "react";
+import axios from "axios";
+
+const CreateSong = () => {
+    const [success, setSuccess] = useState(false);
+    const navigate = useNavigate();
     const onFinish = async (values) => {
-        // console.log("Success:", values);
-
-        const { data } = await axios.post("http://localhost:4000/login", values);
-        if (data.token) {
-            localStorage.setItem('token', data.token)
-            setSuccess(true)
-        }
-        console.log("Data", data);
-    };
-    const onFinishFailed = (errorInfo) => {
-
-        console.log("Failed:", errorInfo);
-    };
+        const response = await axios.post("http://localhost:4000/admin/edit_song/add", values, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+            }
+        })
+        setSuccess(true)
+        console.log(response.data);
+    }
+    const onFinishFailed = async (errorInfo) => {
+        console.log("Failed", errorInfo.message);
+    }
 
     useEffect(() => {
         if (!success) return;
         setSuccess(false);
-        navigate("/");
-    }, [success]);
+        navigate("/song-list");
+    }, [success])
     return (
         <div>
             <Form
@@ -46,12 +45,12 @@ const Login = () => {
                 autoComplete="off"
             >
                 <Form.Item
-                    label="Username"
-                    name="username"
+                    label="Title"
+                    name="title"
                     rules={[
                         {
                             required: true,
-                            message: "Please input your username!",
+                            message: "Please input song's title",
                         },
                     ]}
                 >
@@ -59,29 +58,17 @@ const Login = () => {
                 </Form.Item>
 
                 <Form.Item
-                    label="Password"
-                    name="password"
+                    label="Artist"
+                    name="artist"
                     rules={[
                         {
                             required: true,
-                            message: "Please input your password!",
+                            message: "Please input song's artist",
                         },
                     ]}
                 >
-                    <Input.Password />
+                    <Input />
                 </Form.Item>
-
-                <Form.Item
-                    name="remember"
-                    valuePropName="checked"
-                    wrapperCol={{
-                        offset: 8,
-                        span: 16,
-                    }}
-                >
-                    <Checkbox>Remember me</Checkbox>
-                </Form.Item>
-
                 <Form.Item
                     wrapperCol={{
                         offset: 8,
@@ -95,6 +82,6 @@ const Login = () => {
             </Form>
         </div>
     )
-};
+}
 
-export default Login;
+export default CreateSong

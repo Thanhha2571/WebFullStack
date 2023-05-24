@@ -1,5 +1,3 @@
-
-
 import { gql, useMutation } from '@apollo/client';
 import React, { useRef } from 'react';
 
@@ -15,7 +13,16 @@ const ADD_AUTHOR = gql`
 function AddAuthor() {
   const nameInput = useRef(null);
   const ageInput = useRef(null);
-  const [addAuthor, { data, loading, error }] = useMutation(ADD_AUTHOR);
+  const [addAuthor, { data, loading, error }] = useMutation(ADD_AUTHOR,{
+    onCompleted: (data) =>{
+      console.log(data);
+    },
+    onError:()=>{
+
+    },
+    
+    
+  });
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -23,8 +30,7 @@ function AddAuthor() {
     const age = parseInt(ageInput.current.value);
 
     addAuthor({ variables: { name, age } });
-
-    // Clear input fields
+    
     nameInput.current.value = '';
     ageInput.current.value = '';
   };

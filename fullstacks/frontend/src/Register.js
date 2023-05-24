@@ -1,16 +1,26 @@
 import { Button, Checkbox, Form, Input } from "antd";
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react"
 import axios from "axios";
 
 const Register = () => {
+    const [success, setSuccess] = useState(false);
+    const navigate = useNavigate();
     const onFinish = async (values) => {
-        console.log("Success:", values);
+        // console.log("Success:", values);
         const response = await axios.post("http://localhost:4000/register", values);
-        console.log("response", response);
+        // console.log("response", response);
+        setSuccess(true)
     };
     const onFinishFailed = (errorInfo) => {
 
         console.log("Failed:", errorInfo);
     };
+    useEffect(() => {
+        if (!success) return;
+        setSuccess(false);
+        navigate("/login");
+    }, [success]);
     return (
         <div>
             <Form

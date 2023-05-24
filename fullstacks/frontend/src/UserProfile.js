@@ -17,7 +17,7 @@ const UserProfile = () => {
 
         getUserProfile();
     }, []);
-    // console.log("Users", user);
+    console.log("Users", user);
 
     const dataSource = [
         {
@@ -37,6 +37,12 @@ const UserProfile = () => {
             dataIndex: "role",
             key: "roles",
         },
+        {
+            title: "Songs",
+            dataIndex: "songs",
+            key: "song",
+        },
+
     ];
     return <Table dataSource={dataSource} columns={columns} />;
 };

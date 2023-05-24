@@ -29,17 +29,20 @@ const authorCheck = (req, res, next) => {
 };
 
 const authenCheck = async (req, res, next) => {
-   
-    const token = req.headers.authorization.split(" ")[1]
-    let decoded = jwt.verify(token, "PRIVATE KEY");
-    let { username} = decoded;
-    let user = await userModel.findOne({ username: username}).populate('songs');
-    if (user) {
-        req.user = user;
-        next();
-    }
-    else {sd
-        res.send("User is not found");
+    try {
+        const token = req.headers.authorization.split(" ")[1]
+        let decoded = jwt.verify(token, "PRIVATE KEY");
+        let { username} = decoded;
+        let user = await userModel.findOne({ username: username}).populate('songs');
+        if (user) {
+            req.user = user;
+            next();
+        }
+        else {
+            res.send("User is not found");
+        }  
+    }catch (err) {
+        res.status(401).send(err.message);
     }
 }
 
@@ -83,7 +86,7 @@ app.get('/song/:id', async (req, res) => {
 
 })
 
-app.use('/songs',authenCheck, songRouter);
+app.use('/songs', songRouter);
 app.use ('/user',authenCheck, userRouter)
 app.use ('/admin',authenCheck,authorCheck, adminRouter);
 app.listen(port);
