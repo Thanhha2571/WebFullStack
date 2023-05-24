@@ -63,7 +63,7 @@ const App = () => {
           <Route path="/profile" element={<UserProfile />} />
           <Route path="/add-song" element= {<CreateSong />}/>
           <Route path="/song-list" element={<ListSong data= {songData} />} />
-          <Route path="/song-details/:_id" element={<SongDetail/>}/>
+          <Route path="/song-details/:_id" element={<SongDetail data= {songData}/>}/>
           <Route path="/song-update/:_id" element={<UpdateSong/>}/>
         </Route>
         <Route path="/" element={<>Home</>} />

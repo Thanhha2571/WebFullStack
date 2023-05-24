@@ -2,7 +2,7 @@ import axios from "axios";
 import { Table } from "antd"
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
+import SongItem from "./SongItem";
 
 const ListSong = (props) => {
     const { data } = props
@@ -17,46 +17,33 @@ const ListSong = (props) => {
 
     //     getSongs();
     // }, []);
-    console.log("Songs", data)
-    const handleView = () => {
-        data.filter((data)  => {
-            navigate(`/song-details/${data._id}`);
-        })
-        
-    }
+    // console.log("Songs", data)
+    // const handleView = () => {
+    //     data.filter((data) => {
+    //         navigate(`/song-details/${data._id}`);
+    //     })
 
-    const handleUpdate = () => {
-        data.filter((data)  => {
-            navigate(`/song-update/${data._id}`);
-        })
-    }
+    // }
 
-    const columns = [
-        {
-            title: "Title",
-            dataIndex: "title",
-            key: "title",
-        },
+    // const handleUpdate = () => {
+    //     data.filter((data) => {
+    //         navigate(`/song-update/${data._id}`);
+    //     })
+    // }
 
-        {
-            title: "Artist",
-            dataIndex: "artist",
-            key: "artist",
-        },
-        {
-            title: 'Action',
-            dataIndex: '',
-            key: 'x',
-            render: (_, id) => (
-                <>
-                  <a onClick={handleView}>View</a>
-                  <a onClick={handleUpdate}>Update</a>
-                </>
-              ),
-            },
-          ];
-        
-    return <Table dataSource={data} columns={columns} />
+    return (
+        <div style = {{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+            gridGap: '4rem',
+            width: '100%',
+            margin: '0 auto',
+        }}>
+            {data.map(({ _id,artist, title}) => <SongItem id = {_id}   artist={artist} title={title} />)}
+        </div>
+    )
+
+
 }
 
 export default ListSong;
