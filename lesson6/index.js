@@ -77,11 +77,11 @@ app.get('/song/:id', async (req, res) => {
     // console.log(song);
     const songRole = song.access
     // console.log(songRole);
-    if (songRole.includes("guest")) {
-        res.send(song);
+    if (songRole.includes("member")) {
+        res.send("You have to login to listen this song");
     }
     else {
-        res.send("You have to login to listen this song")
+        res.send(song)
     }
 
 })

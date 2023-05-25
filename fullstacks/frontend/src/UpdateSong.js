@@ -11,6 +11,7 @@ const UpdateSong = () => {
                 Authorization: `Bearer ${localStorage.getItem("token")}`
             }
         });
+        console.log(data);
 
     };
     const onFinishFailed = (errorInfo) => {

@@ -39,7 +39,7 @@ const UserProfile = () => {
         },
         {
             title: "Songs",
-            dataIndex: "songs",
+            dataIndex: "song",
             key: "song",
         },
 

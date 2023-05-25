@@ -17,7 +17,7 @@ const SongDetail = () => {
             setSong(data)
         }
         getSongDetail()
-    }, [])
+    }, [_id])
 
     return (
         <div>
